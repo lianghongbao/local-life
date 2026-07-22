@@ -1,0 +1,66 @@
+<!--pages/posts/posts.wxml-->
+<view class="posts">
+  <!-- 定位条 + 类目 tab 一同包入 sticky-header,统一吸顶避免切类目时位置错位 -->
+  <view class="sticky-header">
+    <!-- 定位条 -->
+    <location-bar bind:change="onLocationChange" />
+
+    <!-- 类目 tab -->
+    <view class="tabs">
+      <scroll-view scroll-x class="tabs-scroll" enhanced bounces show-scrollbar="{{false}}">
+        <view
+          wx:for="{{types}}"
+          wx:key="id"
+          class="tab {{activeType === item.id ? 'is-active' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onTypeChange">
+          <text class="tab-emoji">{{item.emoji}}</text>
+          <text class="tab-name">{{item.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="post-card"
+      data-id="{{item.id}}"
+      bindtap="onItemTap">
+      <view wx:if="{{item.cover}}" class="post-cover-wrap">
+        <image class="post-cover" src="{{item.cover}}" mode="aspectFill" />
+      </view>
+      <view class="post-body">
+        <view class="post-head">
+          <view class="post-type tag">{{item.typeEmoji}} {{item.typeName}}</view>
+          <view wx:if="{{item.statusInfo.name}}" class="post-status" style="color:{{item.statusInfo.color}}">
+            {{item.statusInfo.name}}
+          </view>
+        </view>
+        <view class="post-title font-serif">{{item.title}}</view>
+        <view class="post-content">{{item.content}}</view>
+        <view class="post-meta">
+          <text class="post-area">📍 {{item.area}}</text>
+          <text class="post-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+      <view class="empty-emoji">🍃</view>
+      <view class="empty-text">暂无相关内容</view>
+      <view class="empty-hint">下拉刷新试试</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{finished && list.length > 0}}" class="loading">— 已经到底了 —</view>
+  </view>
+
+  <!-- 浮动发布按钮 -->
+  <view class="fab" bindtap="onPublish">
+    <text class="fab-plus">+</text>
+    <text class="fab-text">发布</text>
+  </view>
+</view>

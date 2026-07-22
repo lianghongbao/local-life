@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "便民信息",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#FAF6F1",
+  "usingComponents": {
+    "location-bar": "/components/location-bar/location-bar"
+  }
+}

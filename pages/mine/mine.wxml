@@ -1,0 +1,74 @@
+<!--pages/mine/mine.wxml-->
+<view class="mine">
+  <!-- 顶部用户卡 -->
+  <view class="hero">
+    <view class="hero-bg"></view>
+
+    <block wx:if="{{logged}}">
+      <view class="user-row">
+        <view class="avatar" hover-class="avatar-hover" hover-stay-time="100" bindtap="onEditProfile">
+          <image wx:if="{{user.avatar}}" class="avatar-img" src="{{user.avatar}}" />
+          <view wx:else class="avatar-fallback">
+            <block wx:if="{{user.nickname[0]}}">{{user.nickname[0]}}</block>
+            <image wx:else class="cat-placeholder" src="https://static.lamborai.com/avatar/avatar.png" mode="aspectFill" binderror="onAvatarError" />
+          </view>
+        </view>
+        <view class="user-info" hover-class="user-info-hover" hover-stay-time="100" bindtap="onEditProfile">
+          <view class="user-name font-serif">{{user.nickname || '小城便利贴用户'}}</view>
+          <view class="user-edit-hint">点击头像或昵称编辑 ›</view>
+        </view>
+        <view class="user-status tag {{user.status === 1 ? 'tag-success' : 'tag-warn'}}">
+          {{user.status === 1 ? '正常' : '已封禁'}}
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="user-row" bindtap="onLoginTap">
+        <view class="avatar avatar-empty">
+          <image class="avatar-empty-img" src="https://static.lamborai.com/avatar/avatar.png" mode="aspectFill" binderror="onAvatarError" />
+        </view>
+        <view class="user-info">
+          <view class="user-name font-serif">未登录</view>
+          <view class="user-hint">点击微信一键登录 ›</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="card entry-grid">
+    <view class="entry-item" bindtap="onMyPosts">
+      <view class="entry-emoji">📋</view>
+      <view class="entry-name">我的发布</view>
+    </view>
+    <view class="entry-item" bindtap="onMyShops">
+      <view class="entry-emoji">🏪</view>
+      <view class="entry-name">我的收录</view>
+    </view>
+    <view class="entry-item" bindtap="onNotices">
+      <view class="entry-emoji">📣</view>
+      <view class="entry-name">公告</view>
+    </view>
+    <view class="entry-item" bindtap="onContact">
+      <view class="entry-emoji">💌</view>
+      <view class="entry-name">反馈</view>
+    </view>
+  </view>
+
+  <!-- 列表菜单(常用) -->
+  <view class="menu card">
+    <view class="menu-item" bindtap="onAbout">
+      <view class="menu-emoji">ℹ️</view>
+      <view class="menu-name">关于小城便利贴</view>
+      <view class="menu-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 退出登录(独立 card,与常用菜单分开,弱化为危险操作) -->
+  <view wx:if="{{logged}}" class="logout-card card" bindtap="onLogout">
+    <text class="logout-text">退出登录</text>
+  </view>
+
+  <view class="footer-safe"></view>
+</view>

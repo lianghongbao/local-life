@@ -1,0 +1,85 @@
+.location-bar {
+  display: flex;
+  align-items: center;
+  /* 自管左右 padding,与各页面元素对齐 */
+  padding: 24rpx 24rpx 16rpx;
+  background: transparent;
+  line-height: 1;
+  box-sizing: border-box;
+  /* 锁最小高度,避免状态文字字号差异导致总高漂移 */
+  min-height: 72rpx;
+}
+.location-bar-tag {
+  width: 8rpx;
+  height: 32rpx;
+  background: var(--color-primary);
+  border-radius: 4rpx;
+  margin-right: 12rpx;
+}
+.location-bar-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+.location-bar-loading {
+  font-size: 26rpx;
+  line-height: 1;
+  color: var(--color-ink-3);
+  font-weight: 400;
+}
+/* 已定位的区名:大号 + 衬线 + 加粗 */
+.location-bar-name {
+  font-size: 30rpx;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: 1rpx;
+  max-width: 360rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 未定位/失败时普通文字:不要大号粗体 */
+.location-bar-text {
+  font-size: 26rpx;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--color-ink-3);
+  letter-spacing: 0;
+}
+.location-bar-street {
+  font-size: 22rpx;
+  color: var(--color-primary);
+  background: rgba(232, 83, 63, 0.08);
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  margin-left: 12rpx;
+  max-width: 280rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.location-bar-arrow {
+  color: var(--color-ink-3);
+  font-size: 22rpx;
+  margin-left: 4rpx;
+}
+.location-bar-action {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  padding: 8rpx 0;
+}
+
+/* 授权 CTA hint(denied / failed 状态) */
+/* hint 样式已废弃,文字+› 箭头已足够引导 */
+.location-bar-arrow.color-primary {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* 失败态 / 拒绝态:竖条变浅灰,视觉降权 */
+.location-bar--failed .location-bar-tag,
+.location-bar--denied .location-bar-tag {
+  background: #D9D2C5;
+}

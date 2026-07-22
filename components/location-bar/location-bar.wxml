@@ -1,0 +1,26 @@
+<view class="location-bar">
+  <view class="location-bar-tag"></view>
+  <view class="location-bar-info" bindtap="onOpenPicker" bindlongpress="onLongPressChip">
+    <!-- 定位中 -->
+    <view wx:if="{{!loaded}}" class="location-bar-loading">定位中…</view>
+
+    <!-- 已定位:显示城市名;不再加 ▾ 箭头,降低视觉噪声 -->
+    <block wx:elif="{{hasLocation}}">
+      <text class="location-bar-name font-serif">{{cityName}}</text>
+    </block>
+
+    <!-- 未授权 / 拒绝 / 失败:引导;不再加 › 箭头 -->
+    <block wx:else>
+      <text class="location-bar-text">点击定位</text>
+    </block>
+  </view>
+</view>
+
+<area-picker
+  wx:if="{{pickerVisible}}"
+  city-adcode="{{cityAdcode}}"
+  area-adcode="{{areaAdcode}}"
+  bind:select="onAreaSelected"
+  bind:selectCity="onCitySelected"
+  bind:close="onPickerClose"
+/>

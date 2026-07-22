@@ -1,0 +1,53 @@
+<!--pages/profile-edit/profile-edit.wxml-->
+<view class="edit-page">
+  <view class="hero card">
+    <!-- 头像：chooseAvatar 必须是 button，不能换成 view -->
+    <view class="avatar-row">
+      <view class="avatar">
+        <image wx:if="{{avatarPreviewUrl}}" class="avatar-img" src="{{avatarPreviewUrl}}" />
+        <view wx:else class="avatar-fallback">
+          <block wx:if="{{nickname[0]}}">{{nickname[0]}}</block>
+          <image wx:else class="cat-placeholder" src="https://static.lamborai.com/avatar/avatar.png" mode="aspectFill" />
+        </view>
+      </view>
+      <button
+        class="btn btn-primary avatar-btn {{avatarUploading ? 'is-loading' : ''}}"
+        open-type="chooseAvatar"
+        bindchooseavatar="onChooseAvatar"
+        disabled="{{avatarUploading || saving}}">
+        <view wx:if="{{avatarUploading}}" class="btn-spinner"></view>
+        <text>{{avatarUploading ? '上传中...' : '更换头像'}}</text>
+      </button>
+    </view>
+
+    <!-- 昵称 -->
+    <view class="field">
+      <view class="field-label">昵称</view>
+      <input
+        class="field-input"
+        type="nickname"
+        placeholder="请输入昵称"
+        maxlength="16"
+        value="{{nickname}}"
+        bindinput="onNicknameInput"
+        bindblur="onNicknameBlur"
+        bindconfirm="onNicknameConfirm"
+        disabled="{{saving}}" />
+      <view class="field-hint">{{nickname.length}}/16</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <button
+      class="btn btn-primary btn-block save-btn {{saving ? 'is-loading' : ''}}"
+      bindtap="onSave"
+      disabled="{{!dirty || saving || avatarUploading}}">
+      <view wx:if="{{saving}}" class="btn-spinner"></view>
+      <text>{{saving ? '保存中...' : '保存'}}</text>
+    </button>
+    <view class="footer-hint">未点保存返回则本次修改不生效</view>
+  </view>
+
+  <view class="footer-safe"></view>
+</view>

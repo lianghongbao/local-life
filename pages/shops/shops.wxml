@@ -1,0 +1,56 @@
+<!--pages/shops/shops.wxml-->
+<view class="shops">
+  <!-- 定位条 -->
+  <location-bar bind:change="onLocationChange" />
+
+  <!-- 类目网格 5 列 -->
+  <view class="cat-grid">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="cat-item {{activeCategory === item.id ? 'is-active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onCategoryChange">
+      <view class="cat-circle">
+        <text class="cat-emoji">{{item.emoji}}</text>
+      </view>
+      <view class="cat-name">{{item.name}}</view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="shop-row"
+      data-id="{{item.id}}"
+      bindtap="onItemTap">
+      <image class="shop-row-cover" src="{{item.cover}}" mode="aspectFill" />
+      <view class="shop-row-body">
+        <view class="shop-row-head">
+          <view class="tag">{{item.catEmoji}} {{item.catName}}</view>
+          <view class="shop-row-view">👀 {{item.view_count}}</view>
+        </view>
+        <view class="shop-row-name font-serif">{{item.name}}</view>
+        <view class="shop-row-desc">{{item.description || '暂无简介'}}</view>
+        <view class="shop-row-addr">📍 {{item.address}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+      <view class="empty-emoji">🏪</view>
+      <view class="empty-text">该类目暂无收录</view>
+      <view class="empty-hint">点右下角分享一个吧</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{finished && list.length > 0}}" class="loading">— 已经到底了 —</view>
+  </view>
+
+  <!-- 收录 FAB -->
+  <view class="fab" bindtap="onShopIn">
+    <text class="fab-plus">+</text>
+    <text class="fab-text">收录</text>
+  </view>
+</view>

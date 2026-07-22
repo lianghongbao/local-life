@@ -1,0 +1,61 @@
+<!--pages/login/login.wxml-->
+<view class="login-page">
+  <!-- 顶部装饰：暖色渐变 + 圆形装饰 -->
+  <view class="hero">
+    <view class="hero-circle hero-circle-1"></view>
+    <view class="hero-circle hero-circle-2"></view>
+    <view class="hero-circle hero-circle-3"></view>
+
+    <view class="brand">
+      <image class="brand-mark-img" src="https://static.lamborai.com/avatar/avatar.png" mode="scaleToFill" />
+      <view class="brand-name font-serif">小城便利贴</view>
+      <view class="brand-slogan">你身边的便民信息站</view>
+    </view>
+  </view>
+
+  <!-- 主体：欢迎语 + 协议 + 按钮 -->
+  <view class="body">
+    <view class="welcome">
+      <view class="welcome-title font-serif">欢迎来到小城便利贴</view>
+      <view class="welcome-desc">二手交易、租房、邻里信息，<br/>一个 App 帮你搞定</view>
+    </view>
+
+    <!-- 特色卡片 -->
+    <view class="features">
+      <view class="feature">
+        <view class="feature-emoji">🛒</view>
+        <view class="feature-name">二手</view>
+      </view>
+      <view class="feature">
+        <view class="feature-emoji">🏠</view>
+        <view class="feature-name">租房</view>
+      </view>
+      <view class="feature">
+        <view class="feature-emoji">📍</view>
+        <view class="feature-name">本地</view>
+      </view>
+    </view>
+
+    <!-- 协议 -->
+    <view class="agreement">
+      <view class="agree-check {{agreed ? 'is-checked' : ''}}" bindtap="toggleAgree">
+        <view wx:if="{{agreed}}" class="agree-check-inner"></view>
+      </view>
+      <view class="agree-text">
+        我已阅读并同意
+        <text class="agree-link" bindtap="goAgreement">《用户协议》</text>
+      </view>
+    </view>
+
+    <!-- 按钮 -->
+    <button
+      class="btn btn-primary btn-block login-btn {{loading ? 'is-loading' : ''}}"
+      bindtap="onLoginTap"
+      disabled="{{loading}}">
+      <view wx:if="{{loading}}" class="btn-spinner"></view>
+      <text>{{loading ? '登录中...' : '微信一键登录'}}</text>
+    </button>
+
+    <view class="footer-hint">登录后可发布信息、收藏本地小店、查看历史</view>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+<!--pages/notice-detail/notice-detail.wxml-->
+<view wx:if="{{loading}}" class="loading-state">
+  <view class="empty-emoji">⏳</view>
+  <view class="empty-text">加载中...</view>
+</view>
+
+<view wx:elif="{{item}}" class="detail">
+  <view class="hero">
+    <view wx:if="{{item.is_top === 1}}" class="pin-tag">📌 置顶</view>
+    <view class="title font-serif">{{item.title}}</view>
+    <view class="time">{{item.timeText}}</view>
+  </view>
+
+  <view class="card content-card">
+    <view class="content">{{item.content}}</view>
+  </view>
+
+  <view class="footer-safe"></view>
+</view>

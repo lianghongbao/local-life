@@ -1,0 +1,222 @@
+/* pages/shop-create/shop-create.wxss */
+.shop-create {
+  padding: 24rpx 32rpx 200rpx;
+}
+
+.section {
+  margin-bottom: 24rpx;
+  padding: 24rpx 28rpx;
+}
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 20rpx;
+}
+.section-tip {
+  font-weight: 400;
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  margin-left: 8rpx;
+}
+
+.cat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.cat-pill {
+  display: flex;
+  align-items: center;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  background: var(--color-warm-bg);
+  border: 2rpx solid transparent;
+}
+.cat-pill.is-active {
+  background: rgba(232, 83, 63, 0.08);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.cat-emoji {
+  margin-right: 8rpx;
+  font-size: 28rpx;
+}
+.cat-name {
+  font-size: 26rpx;
+}
+
+.input {
+  font-size: 30rpx;
+  color: var(--color-ink);
+  padding: 16rpx 0;
+  width: 100%;
+}
+.textarea {
+  font-size: 28rpx;
+  color: var(--color-ink);
+  width: 100%;
+  min-height: 160rpx;
+  line-height: 1.6;
+  padding: 16rpx 0;
+  box-sizing: border-box;
+}
+.address-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.address-input {
+  flex: 1;
+}
+.address-map-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: var(--radius-md);
+  background: var(--color-warm-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+.map-tag {
+  font-size: 22rpx;
+  color: var(--color-success);
+  margin-top: 8rpx;
+}
+.placeholder { color: var(--color-ink-3); }
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+.image-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #F0E8DC;
+}
+.image-thumb {
+  width: 100%;
+  height: 100%;
+}
+.image-remove {
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  line-height: 1;
+}
+.image-add {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  border: 2rpx dashed var(--color-line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(232, 83, 63, 0.02);
+}
+.image-add-plus {
+  font-size: 48rpx;
+  color: var(--color-ink-3);
+  line-height: 1;
+  font-weight: 300;
+}
+.image-add-text {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  margin-top: 8rpx;
+}
+
+.submit-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24rpx 32rpx;
+  background: var(--color-warm-bg);
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.04);
+  /* 显式抬高图层，避免 textarea/input 原生组件层级穿透 */
+  z-index: 100;
+}
+.submit-btn {
+  height: 96rpx;
+  font-size: 32rpx;
+  letter-spacing: 4rpx;
+  position: relative;
+  z-index: 101;
+}
+.submit-tip {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  margin-top: 12rpx;
+}
+
+/* ===== 用户点 📍 才触发的定位遮罩(不进页就弹) ===== */
+.locating-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-warm-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 48rpx;
+}
+.locating-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid var(--color-line);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: locating-spin 0.8s linear infinite;
+}
+@keyframes locating-spin {
+  to { transform: rotate(360deg); }
+}
+.locating-text {
+  margin-top: 32rpx;
+  font-size: 30rpx;
+  color: var(--color-ink);
+  font-weight: 500;
+}
+.locating-hint {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+}
+
+.form-row {
+  padding: 8rpx 0;
+}
+
+.address-tip {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  margin-top: 8rpx;
+}
+.address-tip-warn {
+  font-size: 22rpx;
+  color: var(--color-primary);
+  margin-top: 8rpx;
+}
+
+.required-mark {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-left: 4rpx;
+}

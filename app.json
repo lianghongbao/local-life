@@ -1,0 +1,71 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/posts/posts",
+    "pages/shops/shops",
+    "pages/mine/mine",
+    "pages/login/login",
+    "pages/post-detail/post-detail",
+    "pages/post-create/post-create",
+    "pages/shop-detail/shop-detail",
+    "pages/shop-create/shop-create",
+    "pages/my-posts/my-posts",
+    "pages/my-shops/my-shops",
+    "pages/notices/notices",
+    "pages/notice-detail/notice-detail",
+    "pages/webview/webview",
+    "pages/profile-edit/profile-edit"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "小城便利贴",
+    "navigationBarBackgroundColor": "#FAF6F1",
+    "backgroundColor": "#FAF6F1",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8A8A8A",
+    "selectedColor": "#E8533F",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/posts/posts",
+        "text": "信息",
+        "iconPath": "assets/tabbar/posts.png",
+        "selectedIconPath": "assets/tabbar/posts-active.png"
+      },
+      {
+        "pagePath": "pages/shops/shops",
+        "text": "本地",
+        "iconPath": "assets/tabbar/shops.png",
+        "selectedIconPath": "assets/tabbar/shops-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tabbar/mine.png",
+        "selectedIconPath": "assets/tabbar/mine-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于发布信息时定位,及首页同城推荐"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ]
+}

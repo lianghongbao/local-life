@@ -1,0 +1,102 @@
+<!--pages/post-create/post-create.wxml-->
+<view class="post-create">
+  <!-- ===== 强制定位：GPS 进行中（用户点了 📍 之后才显示） ===== -->
+  <view wx:if="{{locating}}" class="locating-overlay">
+    <view class="locating-spinner"></view>
+    <view class="locating-text">正在获取位置...</view>
+    <view class="locating-hint">请允许位置权限</view>
+  </view>
+
+  <!-- ===== 强制定位：地图选点中 ===== -->
+  <view wx:elif="{{locatingForPicking}}" class="locating-overlay">
+    <view class="locating-spinner"></view>
+    <view class="locating-text">请在地图上选择您的所在区域</view>
+    <view class="locating-hint">必须完成定位才能发布信息</view>
+  </view>
+
+  <!-- ===== 表单：进页就显示，区域未点过时 area 是空的 ===== -->
+  <block wx:else>
+    <!-- 类目选择 -->
+    <view class="card section">
+      <view class="section-title">分类</view>
+      <view class="type-grid">
+        <view
+          wx:for="{{types}}"
+          wx:key="id"
+          class="type-pill {{form.type === item.id ? 'is-active' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onTypeSelect">
+          <text class="type-emoji">{{item.emoji}}</text>
+          <text class="type-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 标题 -->
+    <view class="card section">
+      <view class="section-title">标题</view>
+      <input class="input" placeholder="一句话说清楚你的信息" placeholder-class="placeholder" value="{{form.title}}" data-field="title" bindinput="onInput" maxlength="50" />
+    </view>
+
+    <!-- 描述 -->
+    <view class="card section">
+      <view class="section-title">详细描述</view>
+      <textarea class="textarea" placeholder="详细描述一下你想说的内容" placeholder-class="placeholder" value="{{form.content}}" data-field="content" bindinput="onInput" maxlength="500" auto-height />
+    </view>
+
+    <!-- 图片 -->
+    <view class="card section">
+      <view class="section-title">图片 <text class="section-tip">最多 9 张 · 仅 jpg/png · 单张 ≤ 10MB</text></view>
+      <view class="image-grid">
+        <view
+          wx:for="{{form.images}}"
+          wx:key="fileKey"
+          class="image-item">
+          <image class="image-thumb" src="{{item.url}}" mode="aspectFill" data-idx="{{index}}" bindtap="onPreview" />
+          <view class="image-remove" data-idx="{{index}}" bindtap="onRemoveImage">×</view>
+        </view>
+        <view wx:if="{{form.images.length < 9}}" class="image-add" bindtap="onChooseImage">
+          <view class="image-add-plus">+</view>
+          <view class="image-add-text">添加图片</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 区域 + 联系方式 -->
+    <view class="card section">
+      <view class="form-row">
+        <view class="section-title">📍 所在区域 <text class="required-mark">*</text></view>
+        <view class="address-row">
+          <input
+            class="input address-input"
+            placeholder=" "
+            placeholder-class="placeholder"
+            value="{{form.area}}"
+            data-field="area"
+            bindinput="onAreaInput"
+            bindfocus="onAreaFocus"
+            maxlength="30" />
+          <view class="address-map-btn" bindtap="onChooseLocation">📍</view>
+        </view>
+        <view wx:if="{{locationFailed}}" class="address-tip-warn">⚠️ 定位被拒绝，点击输入框重新授权</view>
+        <view wx:else class="address-tip">点击输入框选择您的所在区域（必填）</view>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <view class="section-title">📞 联系方式</view>
+        <input class="input" placeholder="手机号" placeholder-class="placeholder" value="{{form.contact}}" data-field="contact" bindinput="onInput" maxlength="50" />
+      </view>
+    </view>
+
+    <!-- 提交 -->
+    <view class="submit-area safe-bottom">
+      <button
+        class="btn btn-primary btn-block submit-btn {{submitting ? 'is-loading' : ''}}"
+        bindtap="onSubmit"
+        disabled="{{submitting || uploading}}">
+        {{submitting ? '提交中...' : (isEdit ? '保存修改' : '发布')}}
+      </button>
+      <view class="submit-tip">{{isEdit ? '修改后需重新审核' : '提交后将进入审核，预计 1 小时内完成'}}</view>
+    </view>
+  </block>
+</view>

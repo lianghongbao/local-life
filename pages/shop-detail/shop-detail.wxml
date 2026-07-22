@@ -1,0 +1,139 @@
+<!--pages/shop-detail/shop-detail.wxml-->
+<!-- 骨架屏 -->
+<view wx:if="{{loading}}" class="detail">
+  <view class="skel-cover"></view>
+  <view class="skel-card-overlap" style="height:260rpx"></view>
+  <view class="skel-card" style="height:200rpx"></view>
+  <view class="skel-card" style="height:300rpx"></view>
+  <view class="skel-card" style="height:240rpx"></view>
+</view>
+
+<view wx:elif="{{item}}" class="detail">
+  <!-- 封面图 -->
+  <view class="cover-wrap">
+    <image wx:if="{{images.length > 0}}" class="cover" src="{{images[0]}}" mode="aspectFill" />
+    <view wx:else class="cover-placeholder">
+      <view class="cover-placeholder-emoji">{{item.catEmoji}}</view>
+    </view>
+    <!-- 渐变遮罩 -->
+    <view class="cover-mask"></view>
+  </view>
+
+  <!-- 主信息卡（浮在封面上方） -->
+  <view class="card main-card">
+    <view class="tag" style="margin-bottom:16rpx">{{item.catEmoji}} {{item.catName}}</view>
+    <view class="shop-name font-serif">{{item.name}}</view>
+
+    <view class="stats-row">
+      <view class="stat">
+        <view class="stat-num">{{item.view_count}}</view>
+        <view class="stat-label">浏览</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat">
+        <view class="stat-num" style="color:var(--color-success)">{{item.address.length > 0 ? '✓' : '—'}}</view>
+        <view class="stat-label">已认证</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat">
+        <view class="stat-num">{{item.joinYear}}</view>
+        <view class="stat-label">收录</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 简介 -->
+  <view class="card" wx:if="{{item.description}}">
+    <view class="section-header">
+      <view class="section-tag-bar"></view>
+      <view class="section-title font-serif">简介</view>
+    </view>
+    <view class="description">{{item.description}}</view>
+  </view>
+
+  <!-- 相册 -->
+  <view class="card" wx:if="{{images.length > 1}}">
+    <view class="section-header">
+      <view class="section-tag-bar"></view>
+      <view class="section-title font-serif">相册</view>
+    </view>
+    <view class="gallery">
+      <view wx:for="{{images}}" wx:key="*this" wx:for-index="idx" class="gallery-item-wrap" data-idx="{{idx}}" bindtap="onPreview">
+        <image class="gallery-item" src="{{item}}" mode="aspectFill" />
+        <!-- 最后一张 + 图片多于6张时显示更多遮罩 -->
+        <view wx:if="{{idx === 5 && images.length > 6}}" class="gallery-more">+{{images.length - 6}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图定位 -->
+  <view
+    class="card map-tap"
+    wx:if="{{item.latitude > 0}}"
+    hover-class="map-tap-active"
+    hover-stay-time="100"
+    bindtap="onOpenMap"
+  >
+    <view class="section-header">
+      <view class="section-tag-bar"></view>
+      <view class="section-title font-serif">位置</view>
+      <view class="map-hint">点击查看地图 ›</view>
+    </view>
+    <view class="shop-address">{{item.address}}</view>
+    <!-- 替代内嵌 <map>（避免 Android 原生 map 拦截 touchmove 致页面无法上下滑），
+         改为腾讯静态图 API 真实地图缩略图 + 暖色遮罩，真实导航走 onOpenMap → wx.openLocation -->
+    <view class="shop-map map-preview">
+      <image class="map-preview-img" src="{{item.mapStaticUrl}}" mode="aspectFill" />
+      <view class="map-preview-mask"></view>
+      <view class="map-preview-pin">
+        <view class="pin-icon">📍</view>
+        <view class="pin-label">{{item.address || item.area || '查看位置'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系信息 -->
+  <view class="card">
+    <view class="section-header">
+      <view class="section-tag-bar"></view>
+      <view class="section-title font-serif">联系方式</view>
+    </view>
+    <view class="info-row" bindtap="onCopyPhone">
+      <view class="info-icon-wrap">📞</view>
+      <view class="info-body">
+        <view class="info-label">电话</view>
+        <view class="info-value">{{item.phone}}</view>
+      </view>
+      <view class="info-action tag">复制</view>
+    </view>
+    <view class="divider"></view>
+    <view
+      class="info-row"
+      hover-class="info-row-active"
+      hover-stay-time="100"
+      bindtap="onOpenMap"
+    >
+      <view class="info-icon-wrap">📍</view>
+      <view class="info-body">
+        <view class="info-label">地址</view>
+        <view class="info-value">{{item.address}}</view>
+      </view>
+      <view class="info-action tag">查看</view>
+    </view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <view class="info-icon-wrap">🕐</view>
+      <view class="info-body">
+        <view class="info-label">收录时间</view>
+        <view class="info-value">{{item.timeText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-safe"></view>
+
+  <!-- 底部拨号条 -->
+  <view class="action-bar safe-bottom">
+    <button class="btn btn-primary btn-block call-btn" bindtap="onCall">📞 拨打电话</button>
+  </view>
+</view>

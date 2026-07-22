@@ -1,0 +1,725 @@
+/* pages/post-detail/post-detail.wxss */
+/* 设计原则：内容为王，装饰克制，留白充足 */
+
+.detail {
+  padding-bottom: 180rpx;
+  background: var(--color-warm-bg);
+}
+
+/* ===== 状态条:仅作者看自己的非可见帖子(status≠2)时显示 =====
+   紧凑胶囊 + 小字原因,不打断阅读节奏 */
+.status-pill-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  padding: 20rpx 40rpx 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.status-pill-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.status-pill-text {
+  font-size: 22rpx;
+}
+
+.status-pill.audit {
+  background: rgba(200, 162, 76, 0.12);
+  color: #B68A2D;
+}
+
+.status-pill.offline {
+  background: rgba(153, 153, 153, 0.14);
+  color: #6F6A60;
+}
+
+.status-pill.rejected {
+  background: rgba(194, 74, 74, 0.10);
+  color: #A53B3B;
+}
+
+.status-reason {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  line-height: 1.5;
+  word-break: break-all;
+  flex: 1 1 100%;
+  padding-top: 4rpx;
+}
+
+.status-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-left: auto;
+}
+
+.status-action {
+  font-size: 22rpx;
+  color: var(--color-primary);
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(232, 83, 63, 0.08);
+  line-height: 1.4;
+}
+
+.status-action.danger {
+  color: #A53B3B;
+  background: rgba(194, 74, 74, 0.10);
+}
+
+/* ===== 骨架屏 ===== */
+@keyframes shimmer {
+  0% { background-position: -400rpx 0 }
+  100% { background-position: 400rpx 0 }
+}
+.skel-top {
+  padding: 40rpx 40rpx 48rpx;
+  background: var(--color-paper);
+}
+.skel-bar {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+.skel-block {
+  margin: 24rpx 32rpx 0;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* ===================================================
+   标题区 — 浅暖色底，和正文卡明确区分
+   =================================================== */
+.title-section {
+  background: var(--color-paper);
+  padding: 40rpx 40rpx 36rpx;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.title-tags {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  flex-wrap: wrap;
+}
+.title-tag {
+  display: inline-block;
+  font-size: 24rpx;
+  color: var(--color-primary);
+  background: rgba(232, 83, 63, 0.08);
+  padding: 6rpx 20rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+}
+.title-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+.title-status-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: currentColor;
+}
+.title-status-pill.audit { background: rgba(200, 162, 76, 0.12); color: #B68A2D; }
+.title-status-pill.offline { background: rgba(153, 153, 153, 0.14); color: #6F6A60; }
+.title-status-pill.rejected { background: rgba(194, 74, 74, 0.10); color: #A53B3B; }
+.title-text {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.4;
+  letter-spacing: 1rpx;
+}
+.title-meta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-top: 24rpx;
+}
+.title-time {
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+}
+
+/* ===================================================
+   正文 + 图片 — 白卡，带小标签区分
+   =================================================== */
+.body-section {
+  margin: 24rpx 32rpx 0;
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  padding: 36rpx 32rpx;
+  box-shadow: var(--shadow-1);
+}
+.body-label {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+  margin-bottom: 16rpx;
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+}
+.body-text {
+  font-size: 32rpx;
+  color: var(--color-ink);
+  line-height: 1.85;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 图片网格 */
+.img-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin-top: 32rpx;
+  overflow: hidden;
+}
+.img-grid-item {
+  width: 100%;
+  height: 200rpx;
+  display: block;
+  border-radius: var(--radius-md);
+  background: #F0E8DC;
+}
+
+/* ===================================================
+   信息行 — 简洁横排
+   =================================================== */
+.info-row {
+  display: flex;
+  flex-wrap: wrap;          /* 区域文字长时换行,不挤压浏览次数 */
+  gap: 16rpx 32rpx;
+  padding: 28rpx 40rpx;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  min-width: 0;            /* flex 子项允许收缩,text 才能 ellipsis */
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+}
+.info-icon {
+  font-size: 24rpx;
+}
+
+/* 区域文字过长时优雅截断,不让浏览次数被挤换行/挤出 */
+.info-item-area {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  cursor: pointer;           /* 可点击查看地图 */
+}
+.info-item-area .info-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+/* 浏览次数固定在最右,内容始终完整可见 */
+.info-item-view {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--color-ink-3);
+}
+
+/* 区域条目可点击查看地图 — 用 hover-class 给视觉反馈 */
+.info-item-active {
+  opacity: 0.6;
+  background: rgba(232, 83, 63, 0.04);
+  border-radius: 8rpx;
+  transition: all 0.15s ease;
+}
+.info-arrow {
+  color: var(--color-ink-4, #bbb);
+  font-size: 28rpx;
+  margin-left: 4rpx;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ===================================================
+   地图定位
+   =================================================== */
+.map-section {
+  margin: 24rpx 32rpx 0;
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  padding: 28rpx 32rpx;
+  box-shadow: var(--shadow-1);
+}
+/* 整个 map-section 可点击,提示用户 */
+.map-tap {
+  cursor: pointer;
+  position: relative;
+}
+.map-tap-active {
+  background: rgba(232, 83, 63, 0.04);
+  transition: all 0.15s ease;
+}
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+.map-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.map-hint {
+  font-size: 22rpx;
+  color: var(--color-primary);
+  opacity: 0.75;
+}
+.post-map {
+  width: 100%;
+  height: 320rpx;
+  border-radius: var(--radius-md);
+}
+
+/* ===== 地图预览 =====
+   替代内嵌 <map>：腾讯静态图 API 真实地图缩略图 + 暖色遮罩。
+   真实地图视觉：每个帖子按 lat/lng 渲染不同区域,不再是模板图。
+   touch 事件正常冒泡到 page scroll，避开 <map> 原生组件拦截 touchmove。
+   真实导航/分享仍走 wx.openLocation（见 onOpenMap）。 */
+.map-preview {
+  position: relative;
+  width: 100%;
+  height: 240rpx;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: linear-gradient(135deg, #F8F1E2 0%, #F0E8DC 100%);
+  box-shadow: inset 0 0 0 1rpx rgba(232, 83, 63, 0.08);
+}
+/* 底层:腾讯静态图(按 lat/lng 渲染的真实地图) */
+.map-preview-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* 暖色遮罩:统一 Warm Neighborhood 视觉,让地图色温更暖 */
+.map-preview-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(250, 246, 241, 0.55) 0%,
+    rgba(240, 232, 220, 0.25) 50%,
+    rgba(232, 83, 63, 0.08) 100%
+  );
+  pointer-events: none;
+}
+/* 中心 pin */
+.map-preview-pin {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;  /* 让 touch 继续透到 map-tap 的 onOpenMap */
+}
+.pin-icon {
+  font-size: 56rpx;
+  line-height: 1;
+  filter: drop-shadow(0 4rpx 6rpx rgba(232, 83, 63, 0.35));
+  margin-bottom: 6rpx;
+}
+.pin-label {
+  font-size: 22rpx;
+  color: var(--color-ink-2);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  box-shadow: var(--shadow-1);
+  max-width: 360rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===================================================
+   分隔
+   =================================================== */
+.section-gap {
+  height: 16rpx;
+  background: var(--color-warm-bg);
+}
+
+/* ===================================================
+   发布者 — 极简一行
+   =================================================== */
+.publisher {
+  background: var(--color-paper);
+  padding: 28rpx 40rpx;
+}
+.pub-left {
+  display: flex;
+  align-items: center;
+}
+.pub-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+.pub-avatar-text {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-primary));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cat-placeholder {
+  width: 100%;
+  height: 100%;
+  padding: 8rpx;
+  box-sizing: border-box;
+}
+.pub-info {
+  display: flex;
+  flex-direction: column;
+}
+.pub-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 2rpx;
+}
+.pub-label {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+}
+
+/* ===================================================
+   底部占位 — 给 fixed 评论输入栏让位
+   =================================================== */
+.safe-bottom-space {
+  /* 评论输入栏 fixed 高度 + 回复 banner + 安全区 */
+  height: 220rpx;
+}
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-paper);
+  display: flex;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
+  z-index: 10;
+  gap: 20rpx;
+}
+.bar-contact {
+  flex: 1;
+  min-width: 0;
+}
+.bar-label {
+  display: block;
+  font-size: 20rpx;
+  color: var(--color-ink-3);
+  margin-bottom: 2rpx;
+}
+.bar-value {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  padding: 0 48rpx;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 24rpx rgba(232, 83, 63, 0.3);
+  letter-spacing: 2rpx;
+  flex-shrink: 0;
+}
+.bar-btn:active {
+  background: var(--color-primary-deep);
+}
+
+/* 历史 .bottom-bar 样式已废弃:联系方式改为内容流卡片,避免与 fixed 评论输入栏重叠。 */
+
+/* ===================================================
+   评论
+   =================================================== */
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin: 24rpx 32rpx 0;
+  padding: 24rpx;
+  background: var(--color-paper);
+  border: 1rpx solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+.contact-copy { flex: 1; min-width: 0; }
+.contact-label { display: block; font-size: 24rpx; color: var(--color-ink-3); }
+.contact-value {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 28rpx;
+  color: var(--color-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contact-btn {
+  flex-shrink: 0;
+  padding: 14rpx 28rpx;
+  border-radius: 999rpx;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.contact-btn:active { background: var(--color-primary-deep); }
+
+.comment-toggle {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  margin: 24rpx 32rpx 0;
+  font-size: 28rpx;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-1);
+}
+.comment-toggle .arrow {
+  margin-left: auto;
+  transition: transform .2s;
+  color: var(--color-ink-3);
+}
+.comment-toggle .arrow-up {
+  transform: rotate(180deg);
+}
+.comment-section {
+  padding: 0 32rpx;
+  margin-top: 16rpx;
+}
+.comment-skel {
+  height: 160rpx;
+  background: linear-gradient(90deg, #f0e8dc 25%, #f8f1e2 37%, #f0e8dc 63%);
+  border-radius: var(--radius-md);
+  margin-bottom: 16rpx;
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+@keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.comment-item {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.comment-item .avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-line);
+}
+.comment-item .body {
+  flex: 1;
+  min-width: 0;
+}
+.comment-item .head {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.comment-item .name {
+  font-weight: 600;
+  font-size: 28rpx;
+  color: var(--color-ink);
+}
+.comment-item .shop-tag {
+  background: #5b8def;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+}
+.comment-item .time {
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+  margin-left: auto;
+}
+.mention-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: #ff4d4f;
+  border-radius: 50%;
+  margin-left: 8rpx;
+}
+.comment-item .content {
+  font-size: 28rpx;
+  line-height: 1.5;
+  margin-top: 8rpx;
+  word-break: break-all;
+  color: var(--color-ink);
+}
+.deleted-placeholder {
+  color: #bbb;
+  font-style: italic;
+  margin-top: 8rpx;
+}
+.deleted-placeholder.small {
+  font-size: 24rpx;
+}
+.comment-item .actions {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+}
+.comment-item .actions .liked {
+  color: #ff4d4f;
+}
+.comment-item .actions .more {
+  margin-left: auto;
+  font-size: 32rpx;
+}
+.sub-replies {
+  background: #f8f8f8;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-top: 16rpx;
+}
+.sub-reply {
+  padding: 8rpx 0;
+  border-bottom: 1rpx dashed #eee;
+}
+.sub-reply:last-child {
+  border-bottom: none;
+}
+.sub-head {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+}
+.sub-head .name {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.sub-head .reply-to {
+  color: var(--color-ink-3);
+}
+.sub-reply .actions.small {
+  margin-top: 8rpx;
+}
+.more-replies {
+  text-align: center;
+  color: #5b8def;
+  font-size: 24rpx;
+  padding: 12rpx 0;
+}
+.comment-input-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-paper);
+  border-top: 1rpx solid var(--color-line);
+  padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom));
+  display: flex;
+  /* flex-wrap 让 .reply-banner (flex-basis:100%) 独占一行;
+     否则 row flex 里 width:100% 会把 input/send-btn 挤到右边,只剩几像素 */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16rpx;
+  z-index: 100;
+}
+.comment-input-bar .reply-banner {
+  /* flex-basis:100% 让 banner 独占一行;不能写 width:100%——row flex 下 width:100%
+     会把后面的 input/send-btn 挤到只剩 0 像素,看起来"输入框跑到右边" */
+  flex-basis: 100%;
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+  padding-bottom: 12rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comment-input-bar .reply-banner .cancel {
+  color: #999;
+  padding: 0 8rpx;
+}
+.comment-input-bar .input {
+  flex: 1;
+  background: #f5f5f5;
+  padding: 16rpx 24rpx;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  color: var(--color-ink);
+}
+.comment-input-bar .send-btn {
+  background: #eee;
+  color: #999;
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+}
+.comment-input-bar .send-btn.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+.comment-input-bar .empty,
+.comment-section .empty {
+  text-align: center;
+  color: var(--color-ink-3);
+  font-size: 24rpx;
+  padding: 48rpx 0;
+}

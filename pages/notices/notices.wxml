@@ -1,0 +1,23 @@
+<!--pages/notices/notices.wxml-->
+<view class="notices">
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+    <view class="empty-emoji">📭</view>
+    <view class="empty-text">暂无公告</view>
+  </view>
+
+  <view class="list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="notice-card"
+      data-id="{{item.id}}"
+      bindtap="onItemTap">
+      <view wx:if="{{item.is_top === 1}}" class="notice-pin">📌 置顶</view>
+      <view class="notice-title font-serif">{{item.title}}</view>
+      <view class="notice-time">{{item.timeText}}</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{finished && list.length > 0}}" class="loading">— 已经到底了 —</view>
+  </view>
+</view>

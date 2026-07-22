@@ -1,0 +1,45 @@
+<!--pages/my-posts/my-posts.wxml-->
+<view class="my-posts">
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+    <view class="empty-emoji">📭</view>
+    <view class="empty-text">还没有发布</view>
+    <view class="empty-hint">去发布第一条信息吧</view>
+  </view>
+
+  <view class="list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="post-card"
+      data-id="{{item.id}}"
+      bindtap="onItemTap">
+      <view wx:if="{{item.cover}}" class="post-cover-wrap">
+        <image class="post-cover" src="{{item.cover}}" mode="aspectFill" />
+      </view>
+      <view class="post-body">
+        <view class="post-head">
+          <view class="post-type tag">{{item.typeEmoji}} {{item.typeName}}</view>
+          <view wx:if="{{item.status !== 2}}" class="post-status-pill {{item.statusInfo.tone || 'offline'}}">
+            <view class="post-status-dot"></view>
+            <text>{{item.statusInfo.short}}</text>
+          </view>
+          <view class="post-edit" data-id="{{item.id}}" catchtap="onEdit">编辑</view>
+        </view>
+        <view class="post-title font-serif">{{item.title}}</view>
+        <view class="post-content">{{item.content}}</view>
+        <view class="post-address">📍 {{item.area}}</view>
+        <view class="post-meta">
+          <text class="post-contact">📞 {{item.contact}}</text>
+          <text class="post-time">{{item.time}}</text>
+        </view>
+        <view class="post-actions">
+          <view wx:if="{{item.status === 2}}" class="btn btn-ghost btn-sm" catchtap="onOffline" data-id="{{item.id}}">下架</view>
+          <view wx:elif="{{item.status === 3 || item.status === 4}}" class="btn btn-ghost btn-sm" catchtap="onResubmit" data-id="{{item.id}}">重新上架</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{finished && list.length > 0}}" class="loading">— 已经到底了 —</view>
+  </view>
+</view>

@@ -1,0 +1,130 @@
+.picker-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+}
+.picker-sheet {
+  width: 100%;
+  background: var(--color-paper);
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  padding: 24rpx 0 env(safe-area-inset-bottom);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+.picker-header {
+  padding: 0 32rpx 16rpx;
+}
+.picker-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  padding: 16rpx 0;
+  text-align: center;
+}
+.picker-tabs {
+  display: flex;
+  border-bottom: 1rpx solid var(--color-line);
+}
+.picker-tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: var(--color-ink-2);
+  position: relative;
+}
+.picker-tab.active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.picker-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: var(--color-primary);
+  border-radius: 3rpx;
+}
+.picker-search {
+  position: relative;
+  margin: 16rpx 32rpx 8rpx;
+}
+.picker-search-input {
+  background: var(--color-paper-2);
+  border-radius: 999rpx;
+  padding: 16rpx 60rpx 16rpx 32rpx;
+  font-size: 26rpx;
+  color: var(--color-ink);
+}
+.picker-search-clear {
+  position: absolute;
+  right: 16rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36rpx;
+  height: 36rpx;
+  line-height: 32rpx;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 24rpx;
+}
+.picker-error {
+  padding: 32rpx;
+  text-align: center;
+  color: var(--color-ink-3);
+  font-size: 26rpx;
+}
+.picker-list {
+  flex: 1;
+  max-height: 60vh;
+}
+.picker-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  position: relative;
+}
+.picker-item-tag {
+  width: 6rpx;
+  height: 32rpx;
+  background: var(--color-primary);
+  border-radius: 3rpx;
+  margin-right: 12rpx;
+}
+.picker-item-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.picker-item-name {
+  font-size: 28rpx;
+  color: var(--color-ink);
+}
+.picker-item-sub {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+}
+.picker-item-count {
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+}
+.picker-item.selected {
+  background: rgba(232, 83, 63, 0.04);
+}
+.picker-empty {
+  padding: 80rpx 32rpx;
+  text-align: center;
+  color: var(--color-ink-3);
+  font-size: 26rpx;
+}

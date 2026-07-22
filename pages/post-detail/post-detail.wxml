@@ -1,0 +1,211 @@
+<!--pages/post-detail/post-detail.wxml-->
+
+<!-- 骨架屏 -->
+<view wx:if="{{loading}}" class="detail">
+  <view class="skel-top">
+    <view class="skel-bar" style="width:120rpx;height:40rpx;border-radius:999rpx"></view>
+    <view class="skel-bar" style="width:85%;height:52rpx;margin-top:24rpx"></view>
+    <view class="skel-bar" style="width:55%;height:52rpx;margin-top:12rpx"></view>
+    <view class="skel-bar" style="width:40%;height:32rpx;margin-top:28rpx"></view>
+  </view>
+  <view class="skel-block" style="height:200rpx"></view>
+  <view class="skel-block" style="height:120rpx"></view>
+</view>
+
+<view wx:elif="{{item}}" class="detail">
+
+  <!-- ========== 标题区 ==========
+       作者本人看自己 status≠2 的帖子时,在类型标签旁内联一个状态胶囊。
+       编辑 / 重新上架等操作入口都放在「我的发布」列表卡片,详情页保持纯阅读。 -->
+  <view class="title-section">
+    <view class="title-tags">
+      <view class="title-tag">{{item.typeEmoji}} {{item.typeName}}</view>
+      <view wx:if="{{item.status !== 2}}" class="title-status-pill {{item.statusInfo.tone || 'offline'}}">
+        <view class="title-status-dot"></view>
+        <text>{{item.statusInfo.short}}</text>
+      </view>
+    </view>
+    <view class="title-text font-serif">{{item.title}}</view>
+    <view class="title-meta">
+      <text class="title-time">{{item.timeText}}</text>
+    </view>
+  </view>
+
+  <!-- ========== 正文 + 图片 ========== -->
+  <view class="body-section">
+    <view class="body-label">详细描述</view>
+    <text class="body-text">{{item.content}}</text>
+
+    <!-- 图片网格：统一展示所有图片 -->
+    <view wx:if="{{images.length > 0}}" class="img-grid">
+      <image
+        wx:for="{{images}}"
+        wx:key="*this"
+        src="{{item}}"
+        mode="aspectFill"
+        data-idx="{{index}}"
+        bindtap="onPreview"
+        class="img-grid-item"
+      />
+    </view>
+  </view>
+
+  <!-- ========== 信息行 ========== -->
+  <view class="info-row">
+    <view
+      class="info-item info-item-area"
+      wx:if="{{item.area}}"
+      hover-class="info-item-active"
+      hover-stay-time="100"
+      bindtap="onOpenMap"
+    >
+      <text class="info-icon">📍</text>
+      <text class="info-text">{{item.area}}</text>
+      <text class="info-arrow">›</text>
+    </view>
+    <view class="info-item info-item-view">
+      <text class="info-icon">👀</text>
+      <text>{{item.view_count}} 次浏览</text>
+    </view>
+  </view>
+
+  <!-- ========== 地图定位 ==========
+       之前用内嵌 <map>，Android 端原生 map 组件会拦截卡片区域的 touchmove，
+       导致用户在地图区上下滑不动。
+       改为静态预览图（CSS 网格 + pin），所有交互走 wx.openLocation。
+       -->
+  <view
+    class="map-section map-tap"
+    wx:if="{{item.latitude > 0}}"
+    hover-class="map-tap-active"
+    hover-stay-time="100"
+    bindtap="onOpenMap"
+  >
+    <view class="map-header">
+      <text class="map-title">📍 位置信息</text>
+      <text class="map-hint">点击查看地图 ›</text>
+    </view>
+    <view class="map-preview">
+      <!-- 底层:腾讯静态图(按 lat/lng 渲染真实地图缩略图,按定位显示) -->
+      <image class="map-preview-img" src="{{item.mapStaticUrl}}" mode="aspectFill" />
+      <!-- 暖色遮罩:统一 Warm Neighborhood 视觉 -->
+      <view class="map-preview-mask"></view>
+      <!-- 上层:pin + 区域文字 -->
+      <view class="map-preview-pin">
+        <view class="pin-icon">📍</view>
+        <view class="pin-label">{{item.area || '查看位置'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 分隔 ========== -->
+  <view class="section-gap"></view>
+
+  <!-- ========== 发布者 ========== -->
+  <view class="publisher" wx:if="{{item.nickname}}">
+    <view class="pub-left">
+      <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="pub-avatar" />
+      <view wx:else class="pub-avatar-text">
+        <block wx:if="{{item.nickname[0]}}">{{item.nickname[0]}}</block>
+        <image wx:else class="cat-placeholder" src="https://static.lamborai.com/avatar/avatar.png" mode="aspectFit" />
+      </view>
+      <view class="pub-info">
+        <text class="pub-name">{{item.nickname}}</text>
+        <text class="pub-label">信息发布者</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 联系方式 ==========
+       作者自己看 (from=mine) 时不论 status 都显示;否则只在 status=2 显示 -->
+  <view wx:if="{{item.contact && (from === 'mine' || item.status === 2 || item.status === 1)}}" class="contact-card">
+    <view class="contact-copy">
+      <text class="contact-label">联系方式</text>
+      <text class="contact-value">{{item.contact}}</text>
+    </view>
+    <view class="contact-btn" bindtap="onContact">复制</view>
+  </view>
+
+  <!-- ========== 评论折叠入口 ========== -->
+  <view wx:if="{{from === 'mine' || item.status === 2 || item.status === 1}}" class="comment-toggle" bindtap="toggleExpand">
+    <text wx:if="{{commentCount > 0}}">💬 {{commentCount}} 条评论</text>
+    <text wx:else>💬 还没有人评论，做第一个发声的吧～</text>
+    <text class="arrow {{commentExpanded ? 'arrow-up' : ''}}">▾</text>
+  </view>
+
+  <!-- ========== 评论列表 ========== -->
+  <view wx:if="{{commentExpanded}}" class="comment-section">
+    <block wx:if="{{commentLoading && comments.length === 0}}">
+      <view class="comment-skel"></view>
+      <view class="comment-skel"></view>
+      <view class="comment-skel"></view>
+    </block>
+    <block wx:elif="{{comments.length === 0}}">
+      <view class="empty">还没有人评论</view>
+    </block>
+    <block wx:else>
+      <view wx:for="{{comments}}" wx:key="id" wx:for-item="c" class="comment-item">
+        <!-- 评论头像优先级:
+             1) author.avatar 有值 → 渲染真头像(OSS URL 快照,改名也不消失)
+             2) 无值 → 走全站默认 cat avatar(和其他页面统一,避免灰色)
+             3) binderror(URL 失效) → onCommentAvatarError 把 avatar 置空,
+                wxml 自动降级到 cat avatar(下次不再触发 binderror) -->
+        <image
+          class="avatar"
+          src="{{c.author.avatar || 'https://static.lamborai.com/avatar/avatar.png'}}"
+          binderror="onCommentAvatarError"
+          data-idx="{{index}}"
+        />
+        <view class="body">
+          <view class="head">
+            <text class="name">{{c.author.name}}</text>
+            <text wx:if="{{c.author.is_shop}}" class="shop-tag">店主</text>
+            <text class="time">{{c.created_at}}</text>
+            <view wx:if="{{c.is_mentioned_me}}" class="mention-dot"></view>
+          </view>
+          <view wx:if="{{c.status === 2}}" class="deleted-placeholder">该评论已删除</view>
+          <view wx:else class="content">{{c.content}}</view>
+          <view class="actions">
+            <view class="action" data-comment-id="{{c.id}}" catchtap="onLikeTap">
+              <text class="{{c.is_liked ? 'liked' : ''}}">❤ {{c.like_count || 0}}</text>
+            </view>
+            <view class="action" data-comment-id="{{c.id}}" data-name="{{c.author.name}}" catchtap="onReplyTap">💬 回复</view>
+            <view class="action more" catchtap="onMoreTap" data-action="more" data-comment-id="{{c.id}}">⋯</view>
+          </view>
+          <view wx:if="{{c.top_replies.length > 0}}" class="sub-replies">
+            <view wx:for="{{c.top_replies}}" wx:for-item="r" wx:key="id" class="sub-reply">
+              <view class="sub-head">
+                <text class="name">{{r.author.name}}</text>
+                <text wx:if="{{r.author.is_shop}}" class="shop-tag">商家</text>
+                <text wx:if="{{r.reply_to_user}}" class="reply-to">{{r.reply_to_user.name}}的回复</text>
+                <text class="time">{{r.created_at}}</text>
+              </view>
+              <view wx:if="{{r.status === 2}}" class="deleted-placeholder small">该评论已删除</view>
+              <view wx:else class="content">{{r.content}}</view>
+              <view class="actions small">
+                <view class="action" data-parent-id="{{c.id}}" data-comment-id="{{r.id}}" catchtap="onLikeTap">
+                  <text class="{{r.is_liked ? 'liked' : ''}}">❤ {{r.like_count || 0}}</text>
+                </view>
+                <view class="action more" data-parent-id="{{c.id}}" catchtap="onMoreTap" data-action="more" data-comment-id="{{r.id}}">⋯</view>
+              </view>
+            </view>
+          </view>
+          <view wx:if="{{c.has_more_replies}}" class="more-replies" data-root-id="{{c.id}}" catchtap="onLoadReplies">查看全部 {{c.total_replies}} 条回复 ▾</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- ========== 评论输入框 ========== -->
+  <view wx:if="{{from === 'mine' || item.status === 2 || item.status === 1}}" class="comment-input-bar safe-bottom">
+    <view wx:if="{{replyTarget}}" class="reply-banner">
+      回复 {{replyTarget.name}}
+      <text class="cancel" catchtap="onCancelReply">×</text>
+    </view>
+    <input class="input" placeholder="{{replyTarget ? '回复 ' + replyTarget.name : '说点什么...'}}" value="{{commentInput}}" bindinput="onInputChange" bindconfirm="onSendComment" />
+    <view class="send-btn {{commentInput ? 'active' : ''}}" catchtap="onSendComment">发送</view>
+  </view>
+
+  <!-- 底部占位：仅当用户未展开评论但页面较长时保留 fallback -->
+  <view class="safe-bottom-space"></view>
+</view>

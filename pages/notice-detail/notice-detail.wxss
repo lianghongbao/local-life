@@ -1,0 +1,56 @@
+/* pages/notice-detail/notice-detail.wxss */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200rpx 0;
+  color: var(--color-ink-3);
+}
+
+.detail { padding-bottom: 80rpx; }
+
+.hero {
+  background: linear-gradient(135deg, #F4A78F 0%, #E8533F 100%);
+  padding: 64rpx 40rpx 80rpx;
+  border-radius: 0 0 48rpx 48rpx;
+  color: #fff;
+  text-align: center;
+  position: relative;
+}
+.pin-tag {
+  position: absolute;
+  top: 32rpx;
+  right: 32rpx;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  backdrop-filter: blur(8rpx);
+}
+.title {
+  font-size: 44rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 2rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 16rpx;
+}
+.time {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.content-card {
+  margin: -32rpx 32rpx 0;
+  position: relative;
+  z-index: 2;
+}
+.content {
+  font-size: 30rpx;
+  color: var(--color-ink);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.footer-safe { height: 32rpx; }

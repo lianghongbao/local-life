@@ -1,0 +1,221 @@
+<!--pages/home/home.wxml-->
+<view class="home">
+  <!-- 骨架屏：首次无缓存时展示 -->
+  <view wx:if="{{showSkeleton}}" class="skeleton">
+    <!-- 公告骨架 -->
+    <view class="skel-notice"></view>
+    <!-- 轮播骨架 -->
+    <view class="skel-banner"></view>
+    <!-- 类目骨架 -->
+    <view class="skel-grid">
+      <view class="skel-circle" wx:for="{{[1,2,3,4]}}" wx:key="*this"></view>
+    </view>
+    <!-- CTA 骨架 -->
+    <view class="skel-cta-row">
+      <view class="skel-cta"></view>
+      <view class="skel-cta"></view>
+    </view>
+    <!-- 商家骨架 -->
+    <view class="skel-section-title"></view>
+    <view class="skel-shop-masonry">
+      <view class="skel-shop-col">
+        <view class="skel-shop skel-shop-tall"></view>
+        <view class="skel-shop"></view>
+      </view>
+      <view class="skel-shop-col">
+        <view class="skel-shop"></view>
+        <view class="skel-shop skel-shop-tall"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 真实内容 -->
+  <view wx:else>
+  <!-- 定位条:外层 .location-bar-offset 用 margin: 0 -24rpx 抵消 home 最外层 padding -->
+  <view class="location-bar-offset">
+    <location-bar bind:change="onLocationChange" />
+  </view>
+
+  <!-- 公告跑马灯 -->
+  <view wx:if="{{notices.length > 0}}" class="notice-bar" bindtap="onSeeAllNotices">
+    <view class="notice-bar-icon">📣</view>
+    <swiper
+      class="notice-bar-swiper"
+      vertical
+      autoplay
+      circular
+      interval="3000"
+      duration="600">
+      <swiper-item
+        wx:for="{{notices}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onNoticeTap">
+        <view class="notice-bar-text">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+    <view class="notice-bar-more">›</view>
+  </view>
+
+  <!-- 轮播图 -->
+  <view wx:if="{{banners.length > 0}}" class="banner-wrap">
+    <swiper
+      class="banner"
+      autoplay
+      circular
+      interval="4000"
+      indicator-dots="{{banners.length > 1}}"
+      indicator-color="rgba(255,255,255,0.5)"
+      indicator-active-color="#fff">
+      <swiper-item
+        wx:for="{{banners}}"
+        wx:key="id"
+        data-jump_type="{{item.jump_type}}"
+        data-jump_target="{{item.jump_target}}"
+        bindtap="onBannerTap">
+        <image class="banner-img" src="{{item.image}}" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 4 类目入口 -->
+  <view class="quick-grid">
+    <view
+      wx:for="{{quickEntries}}"
+      wx:key="id"
+      class="quick-item"
+      data-url="{{item.url}}"
+      bindtap="onQuickEntry">
+      <view class="quick-circle" style="background:{{item.color}}">
+        <text class="quick-emoji">{{item.emoji}}</text>
+      </view>
+      <view class="quick-name">{{item.name}}</view>
+    </view>
+  </view>
+
+  <!-- 发布入口 -->
+  <view class="cta-row">
+    <view class="cta-card cta-card-publish" bindtap="onPublishPost">
+      <view class="cta-emoji">📝</view>
+      <view class="cta-info">
+        <view class="cta-title">我要发布</view>
+        <view class="cta-sub">招租、求购、二手交易一键搞定</view>
+      </view>
+      <view class="cta-arrow">›</view>
+    </view>
+    <view class="cta-card cta-card-shop" bindtap="onShopIn">
+      <view class="cta-emoji">🏪</view>
+      <view class="cta-info">
+        <view class="cta-title">本地收录</view>
+        <view class="cta-sub">让街坊更容易找到你</view>
+      </view>
+      <view class="cta-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 本地推荐(本地小店 + 用户发帖混合流) -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title-wrap">
+        <view class="section-tag">·</view>
+        <view class="section-title font-serif">本地推荐</view>
+      </view>
+    </view>
+
+    <view wx:if="{{(feedLeft.length + feedRight.length) === 0 && !loading}}" class="empty">
+      <view class="empty-emoji">🌱</view>
+      <view class="empty-text">附近还没有分享</view>
+      <view class="empty-hint">欢迎第一个分享</view>
+    </view>
+
+    <!-- 两列瀑布流：左右分列，混合渲染 shop/post 卡 -->
+    <view class="shop-masonry">
+      <view class="shop-col shop-col-left">
+        <block wx:for="{{feedLeft}}" wx:key="id">
+          <!-- 小店卡 -->
+          <view
+            wx:if="{{item._feedType === 'shop'}}"
+            class="shop-card"
+            data-type="shop"
+            data-id="{{item.id}}"
+            bindtap="onFeedTap">
+            <image class="shop-cover" src="{{item.cover}}" mode="widthFix" />
+            <view class="shop-info">
+              <view class="shop-cat tag">{{item.catEmoji}} {{item.catName}}</view>
+              <view class="shop-name font-serif">{{item.name}}</view>
+              <view class="shop-meta">
+                <text class="shop-view">👀 {{item.view_count}}</text>
+                <text wx:if="{{item.nickname}}" class="shop-author">{{item.nickname}}</text>
+              </view>
+            </view>
+          </view>
+          <!-- 帖子卡 -->
+          <view
+            wx:elif="{{item._feedType === 'post'}}"
+            class="post-card"
+            data-type="post"
+            data-id="{{item.id}}"
+            bindtap="onFeedTap">
+            <image wx:if="{{item.cover}}" class="post-cover" src="{{item.cover}}" mode="widthFix" />
+            <view class="post-info">
+              <view class="post-cat tag">{{item.typeEmoji}} {{item.typeName}}</view>
+              <view class="post-title font-serif">{{item.title}}</view>
+              <view class="post-meta">
+                <text class="post-view">👀 {{item.view_count}}</text>
+                <text wx:if="{{item.comment_count}}" class="post-comment">💬 {{item.comment_count}}</text>
+                <text wx:if="{{item.nickname}}" class="post-author">{{item.nickname}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="shop-col shop-col-right">
+        <block wx:for="{{feedRight}}" wx:key="id">
+          <!-- 小店卡 -->
+          <view
+            wx:if="{{item._feedType === 'shop'}}"
+            class="shop-card"
+            data-type="shop"
+            data-id="{{item.id}}"
+            bindtap="onFeedTap">
+            <image class="shop-cover" src="{{item.cover}}" mode="widthFix" />
+            <view class="shop-info">
+              <view class="shop-cat tag">{{item.catEmoji}} {{item.catName}}</view>
+              <view class="shop-name font-serif">{{item.name}}</view>
+              <view class="shop-meta">
+                <text class="shop-view">👀 {{item.view_count}}</text>
+                <text wx:if="{{item.nickname}}" class="shop-author">{{item.nickname}}</text>
+              </view>
+            </view>
+          </view>
+          <!-- 帖子卡 -->
+          <view
+            wx:elif="{{item._feedType === 'post'}}"
+            class="post-card"
+            data-type="post"
+            data-id="{{item.id}}"
+            bindtap="onFeedTap">
+            <image wx:if="{{item.cover}}" class="post-cover" src="{{item.cover}}" mode="widthFix" />
+            <view class="post-info">
+              <view class="post-cat tag">{{item.typeEmoji}} {{item.typeName}}</view>
+              <view class="post-title font-serif">{{item.title}}</view>
+              <view class="post-meta">
+                <text class="post-view">👀 {{item.view_count}}</text>
+                <text wx:if="{{item.comment_count}}" class="post-comment">💬 {{item.comment_count}}</text>
+                <text wx:if="{{item.nickname}}" class="post-author">{{item.nickname}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 无限下滑 loading / 结束 -->
+    <view wx:if="{{feedLoading}}" class="feed-loading">加载中...</view>
+    <view wx:elif="{{feedFinished && (feedLeft.length + feedRight.length) > 0}}" class="feed-loading">— 已经到底了 —</view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view class="footer-safe"></view>
+  </view>
+</view>

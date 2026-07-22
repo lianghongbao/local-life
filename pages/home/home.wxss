@@ -1,0 +1,402 @@
+/* pages/home/home.wxss */
+/* 上下无 padding:让 location-bar 贴顶;左右 24rpx 给 banner/cta-row 等提供安全边距 */
+.home {
+  padding: 0 24rpx;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ===== 骨架屏 ===== */
+@keyframes skel-shimmer {
+  0% { background-position: -400rpx 0 }
+  100% { background-position: 400rpx 0 }
+}
+.skeleton {
+  animation: none;
+}
+.skel-notice {
+  height: 72rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+  margin-bottom: 24rpx;
+}
+.skel-banner {
+  height: 360rpx;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+  margin-bottom: 32rpx;
+}
+.skel-grid {
+  display: flex;
+  justify-content: space-around;
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  padding: 32rpx 16rpx;
+  margin-bottom: 32rpx;
+}
+.skel-circle {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+}
+.skel-cta-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 48rpx;
+}
+.skel-cta {
+  flex: 1;
+  height: 120rpx;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+}
+.skel-section-title {
+  width: 240rpx;
+  height: 40rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+  margin-bottom: 24rpx;
+}
+.skel-shop-row {
+  display: flex;
+  gap: 24rpx;
+}
+.skel-shop {
+  width: 280rpx;
+  height: 300rpx;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #F0E8DC 25%, #F8F1E2 50%, #F0E8DC 75%);
+  background-size: 800rpx 100%;
+  animation: skel-shimmer 1.5s infinite linear;
+}
+
+/* ===== 公告跑马灯 ===== */
+/* 抵消 home 最外层左右 padding,使 location-bar 左对齐屏边 */
+.location-bar-offset {
+  margin: 0 -24rpx;
+}
+
+.notice-bar {
+  display: flex;
+  align-items: center;
+  background: var(--color-paper);
+  border-radius: 999rpx;
+  padding: 12rpx 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-1);
+}
+.notice-bar-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+.notice-bar-swiper {
+  flex: 1;
+  height: 48rpx;
+  font-size: 26rpx;
+  color: var(--color-ink-2);
+}
+.notice-bar-text {
+  height: 48rpx;
+  line-height: 48rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notice-bar-more {
+  color: var(--color-ink-3);
+  font-size: 32rpx;
+  margin-left: 8rpx;
+}
+
+/* ===== 轮播 ===== */
+.banner-wrap {
+  margin: 0 -8rpx 32rpx;
+}
+.banner {
+  width: 100%;
+  height: 360rpx;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+}
+.banner-img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-xl);
+}
+
+/* ===== 4 类目 ===== */
+.quick-grid {
+  display: flex;
+  justify-content: space-between;
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  padding: 32rpx 16rpx;
+  box-shadow: var(--shadow-1);
+  margin-bottom: 32rpx;
+}
+.quick-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.quick-circle {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+.quick-emoji {
+  font-size: 48rpx;
+}
+.quick-name {
+  font-size: 26rpx;
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+/* ===== 双 CTA 卡 ===== */
+.cta-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 48rpx;
+}
+.cta-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.cta-card-publish {
+  background: linear-gradient(135deg, #FFF2EC 0%, #FFE0D2 100%);
+}
+.cta-card-shop {
+  background: linear-gradient(135deg, #F8F1E2 0%, #EFE0BC 100%);
+}
+.cta-emoji {
+  font-size: 56rpx;
+  margin-right: 16rpx;
+}
+.cta-info {
+  flex: 1;
+  min-width: 0;
+}
+.cta-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 4rpx;
+}
+.cta-sub {
+  font-size: 22rpx;
+  color: var(--color-ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cta-arrow {
+  color: var(--color-ink-3);
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+/* ===== 区块 ===== */
+.section {
+  margin-bottom: 32rpx;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24rpx;
+}
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+}
+.section-tag {
+  width: 8rpx;
+  height: 32rpx;
+  background: var(--color-primary);
+  border-radius: 4rpx;
+  margin-right: 12rpx;
+}
+.section-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: 2rpx;
+}
+.section-more {
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+  padding: 8rpx 0;
+}
+
+/* ===== 商家两列瀑布流 ===== */
+.shop-masonry {
+  display: flex;
+  gap: 20rpx;
+  align-items: flex-start;
+  /* 抵消外层 padding,让瀑布流到屏幕边缘对齐 */
+  margin: 0 -32rpx;
+  padding: 0 32rpx;
+}
+.shop-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.shop-card {
+  background: var(--color-paper);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+  break-inside: avoid;
+  transition: transform 0.2s ease;
+}
+.shop-card:active {
+  transform: scale(0.98);
+}
+.shop-cover {
+  display: block;
+  width: 100%;
+  /* mode=widthFix:高度由原图比例自适应,实现瀑布流参差感 */
+  background: #F0E8DC;
+}
+.shop-info {
+  padding: 16rpx 20rpx 20rpx;
+}
+.shop-cat {
+  display: inline-block;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  margin-bottom: 10rpx;
+  background: var(--color-cream);
+  color: var(--color-ink-2);
+  border-radius: 999rpx;
+}
+.shop-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.shop-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+}
+.shop-view {
+  flex-shrink: 0;
+}
+.shop-author {
+  flex: 1;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink-3);
+}
+
+/* ====== 帖子卡(本地推荐混合流) ====== */
+.post-card {
+  background: var(--color-paper);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+  break-inside: avoid;
+  transition: transform 0.2s ease;
+}
+.post-card:active {
+  transform: scale(0.98);
+}
+.post-cover {
+  display: block;
+  width: 100%;
+  background: #F0E8DC;
+}
+.post-info {
+  padding: 16rpx 20rpx 20rpx;
+}
+.post-cat {
+  display: inline-block;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  margin-bottom: 10rpx;
+  background: var(--color-cream);
+  color: var(--color-ink-2);
+  border-radius: 999rpx;
+}
+.post-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 22rpx;
+  color: var(--color-ink-3);
+}
+.post-view,
+.post-comment {
+  flex-shrink: 0;
+}
+.post-author {
+  flex: 1;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink-3);
+}
+
+/* ====== 无限下滑 loading 文案 ====== */
+.feed-loading {
+  text-align: center;
+  padding: 32rpx 0;
+  font-size: 24rpx;
+  color: var(--color-ink-3);
+}
+
+.footer-safe {
+  height: 64rpx;
+}

@@ -1,38 +1,17 @@
 // components/location-bar/location-bar.js
 const location = require('../../utils/location.js');
-const QQMapWX = require('../../utils/qqmap-wx-jssdk.js');
-const { TENCENT_MAP_KEY } = require('../../utils/config.js');
 
-const qqmapsdk = new QQMapWX({ key: TENCENT_MAP_KEY })
-
+// 复用 utils/location.js 的 reverseLocation(与 app.js bootstrapLocation 同一条后端路径)
 function clientReverse(lat, lng) {
-  return new Promise((resolve, reject) => {
-    qqmapsdk.reverseGeocoder({
-      location: { latitude: lat, longitude: lng },
-      coord_type: 5,
-      get_poi: 0,
-      success: (res) => {
-        const r = (res && res.result) || {}
-        const ac = r.address_component || {}
-        const ad = r.ad_info || {}
-        const cityAdcode = ad.city_code ? ad.city_code.slice(-6) : ''
-        const cityName = ac.city || ''
-        if (!cityAdcode || !cityName) {
-          resolve(null)
-          return
-        }
-        resolve({
-          city_adcode: cityAdcode,
-          city_name: cityName,
-          area_adcode: ad.adcode || '',
-          area_name: ac.district || '',
-          lat: lat, lng: lng
-        })
-      },
-      fail: (err) => {
-        reject(err)
-      }
-    })
+  return location.reverseLocation(lat, lng).then((r) => {
+    if (!r || !r.city_name) return null
+    return {
+      city_adcode: r.city_adcode || '',
+      city_name: r.city_name || '',
+      area_adcode: r.area_adcode || '',
+      area_name: r.area_name || '',
+      lat: lat, lng: lng
+    }
   })
 }
 
@@ -93,28 +72,46 @@ Component({
         return
       }
 
-      // 4) 首次/未知:主动弹授权(如果 app.js 的 bootstrap 没调)
-      //   关键:进入页面就弹授权,不等用户点
+      // 4) app.js bootstrap 还在跑 → 轮询等结果,8s 超时后弹授权
       this.setData({ loaded: false })
-      // 如果 app.js bootstrap 还在跑,等它 800ms
       if (!appStatus) {
-        setTimeout(() => {
-          const s = (app && app.globalData && app.globalData.bootstrapLocationStatus) || ''
-          if (s === 'granted') {
-            const loc = app && app.globalData && app.globalData.bootstrapLocation
-            if (loc) this._applyLocation(loc)
-          } else if (s === 'denied') {
-            this.setData({ loaded: true, hasLocation: false, authStatus: 'denied', cityName: '' })
-          } else {
-            // 连 bootstrap 都没结果,自己弹授权
-            this._doAuthorize()
-          }
-        }, 800)
+        this._waitForBootstrap(8000)
         return
       }
 
-      // app.js 已经跑完但没有结果(failed 或者别的)
+      // app.js 已结束但没拿到结果 → 自己弹授权
       this._doAuthorize()
+    },
+
+    /**
+     * 轮询 globalData.bootstrapLocation 直到有结果或超时
+     * @param {number} maxMs 最大等待毫秒
+     */
+    _waitForBootstrap(maxMs) {
+      const app = getApp()
+      const start = Date.now()
+      const tick = () => {
+        const s = (app && app.globalData && app.globalData.bootstrapLocationStatus) || ''
+        const loc = app && app.globalData && app.globalData.bootstrapLocation
+        if (s === 'granted' && loc && loc.city_name) {
+          this._applyLocation(loc)
+          return
+        }
+        if (s === 'denied') {
+          this.setData({ loaded: true, hasLocation: false, authStatus: 'denied', cityName: '' })
+          return
+        }
+        if (s === 'granted' || s === 'failed' || s === 'throttled') {
+          this._doAuthorize()
+          return
+        }
+        if (Date.now() - start >= maxMs) {
+          this._doAuthorize()
+          return
+        }
+        setTimeout(tick, 200)
+      }
+      tick()
     },
 
     _applyLocation(loc) {
@@ -192,7 +189,11 @@ Component({
           this._onLocationFailed(loc.__err)
           return
         }
-        const reverse = await clientReverse(loc.latitude, loc.longitude)
+        // 8s 兜底:reverse 即使没返回也强制结束,避免"一直定位中"挂死 UI
+        const reverse = await Promise.race([
+          clientReverse(loc.latitude, loc.longitude),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('reverse timeout')), 8000))
+        ])
         if (!reverse) {
           this.setData({ loaded: true, authStatus: 'granted', pickerVisible: true })
           return

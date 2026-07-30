@@ -240,12 +240,14 @@ function openLocationSetting() {
  * @returns {Promise<object>} {city_adcode, city_name, area_adcode, area_name, street_name, lat, lng, ts}
  */
 async function reverseLocation(lat, lng) {
+  // 失败立刻弹 toast + 8s 超时(短于默认 15s),避免定位长时间无反馈
   const data = await request({
     url: '/api/v1/geo/reverse',
     method: 'GET',
     data: { lat, lng },
     auth: false,
-    silent: true
+    silent: false,
+    timeout: 8000
   })
   return {
     city_adcode: (data && data.city_adcode) || '',

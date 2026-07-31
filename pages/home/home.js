@@ -36,10 +36,6 @@ function buildQuickEntries() {
 const HOME_CACHE_KEY = 'lhb_home_cache' // 老的(notices+banners+精选商家)
 const HOME_CACHE_TTL = 5 * 60 * 1000 // 5 分钟
 
-// 混合流缓存(分页独立 key,持久化 page=1 的首页首屏内容)
-const FEED_CACHE_KEY_PREFIX = 'lhb_home_feed_cache_p'
-const FEED_CACHE_TTL = 5 * 60 * 1000
-
 Page({
   data: {
     loading: true,
@@ -134,30 +130,7 @@ Page({
   },
 
   /**
-   * 读首页混合流分页缓存(只缓存 page=1)
-   */
-  _readFeedCache(page) {
-    try {
-      const key = FEED_CACHE_KEY_PREFIX + page
-      const raw = wx.getStorageSync(key)
-      if (raw && raw.data && raw.ts && Date.now() - raw.ts < FEED_CACHE_TTL) {
-        return raw.data
-      }
-    } catch (_) {}
-    return null
-  },
-
-  /**
-   * 写首页混合流分页缓存(只缓存 page=1)
-   */
-  _writeFeedCache(page, data) {
-    if (page !== 1) return
-    try {
-      wx.setStorageSync(FEED_CACHE_KEY_PREFIX + page, { data, ts: Date.now() })
-    } catch (_) {}
-  },
-
-  /**
+   /**
    * 将 API 数据渲染到页面(抽成独立方法,缓存和网络共用)
    */
   _applyData(data) {
@@ -228,23 +201,6 @@ Page({
 
     const page = reset ? 1 : this.data.feedPage
 
-    // 缓存优先(仅 page=1)
-    //   - 命中缓存直接渲染,本轮不再触发网络请求(避免接续导致重复渲染)
-    //   - 缓存 5 分钟过期,下一次 onShow/onPullDownRefresh 时会重新走网络
-    if (reset) {
-      const cached = this._readFeedCache(1)
-      if (cached && cached.list) {
-        const items = cached.list.map((it) => this.formatFeedItem(it))
-        this.setData({
-          ...this._splitFeed(items),
-          feedPage: 2, // 下一拉页码
-          feedFinished: !cached.hasMore,
-          feedLoading: false
-        })
-        return
-      }
-    }
-
     await this._fetchFeed(page, reset)
   },
 
@@ -287,11 +243,6 @@ Page({
         feedFinished: !res.has_more,
         feedLoading: false
       })
-
-      // 写缓存(仅 page=1)
-      if (reset) {
-        this._writeFeedCache(1, { list: res.list, hasMore: res.has_more })
-      }
     } catch (e) {
       this.setData({ feedLoading: false })
     }
